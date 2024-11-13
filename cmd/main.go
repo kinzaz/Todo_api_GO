@@ -8,9 +8,11 @@ import (
 )
 
 func main() {
+	// database := db.NewDb()
 	conf := configs.LoadConfig()
 
 	router := http.NewServeMux()
+
 	server := http.Server{
 		Addr:    ":" + conf.Port,
 		Handler: router,

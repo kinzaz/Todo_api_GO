@@ -7,8 +7,13 @@ import (
 	"github.com/joho/godotenv"
 )
 
+type DB struct {
+	DSN string
+}
+
 type Config struct {
 	Port string
+	DB   DB
 }
 
 func LoadConfig() *Config {
@@ -18,5 +23,8 @@ func LoadConfig() *Config {
 
 	return &Config{
 		Port: os.Getenv("SERVER_PORT"),
+		DB: DB{
+			DSN: os.Getenv("DSN"),
+		},
 	}
 }
