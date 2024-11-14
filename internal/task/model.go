@@ -8,3 +8,10 @@ type Task struct {
 	Description string
 	Completed   bool `gorm:"default:false"`
 }
+
+func NewTask(title, description string) *Task {
+	return &Task{
+		Title:       title,
+		Description: description,
+	}
+}

@@ -5,13 +5,23 @@ import (
 	"log"
 	"net/http"
 	"todo_GO/configs"
+	"todo_GO/internal/task"
+	"todo_GO/pkg/db"
 )
 
 func main() {
-	// database := db.NewDb()
+	database := db.NewDb()
 	conf := configs.LoadConfig()
 
 	router := http.NewServeMux()
+
+	/* Repositories */
+	taskRepository := task.NewTaskRepository(database)
+
+	/* Handlers */
+	task.NewTaskHandler(router, task.TaskHandlerDeps{
+		TaskRepository: taskRepository,
+	})
 
 	server := http.Server{
 		Addr:    ":" + conf.Port,
