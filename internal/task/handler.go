@@ -20,6 +20,7 @@ func NewTaskHandler(router *http.ServeMux, deps TaskHandlerDeps) {
 	}
 
 	router.HandleFunc("POST /task", handler.Create())
+	router.HandleFunc("DELETE /task/{id}", handler.Delete())
 }
 
 func (handler *TaskHandler) Create() http.HandlerFunc {
@@ -39,5 +40,27 @@ func (handler *TaskHandler) Create() http.HandlerFunc {
 		}
 
 		response.Json(w, createdTask, 201)
+	}
+}
+
+func (handler *TaskHandler) Delete() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		idString := r.PathValue("id")
+
+		_, err := handler.TaskRepository.GetById(idString)
+
+		if err != nil {
+			http.Error(w, "Задачи не существует", http.StatusBadRequest)
+			return
+		}
+
+		err = handler.TaskRepository.Delete(idString)
+
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		response.Json(w, nil, 200)
 	}
 }
