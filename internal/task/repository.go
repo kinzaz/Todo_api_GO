@@ -36,7 +36,7 @@ func (repo *TaskRepository) Delete(id string) error {
 
 func (repo *TaskRepository) GetById(id string) (*Task, error) {
 	var task Task
-	result := repo.Database.DB.First(&task, id)
+	result := repo.Database.DB.Where("id = ? AND deletedAt IS NULL", id).First(&task)
 	if result.Error != nil {
 		return nil, result.Error
 	}
