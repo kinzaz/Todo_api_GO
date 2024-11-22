@@ -34,12 +34,29 @@ func (repo *TaskRepository) Delete(id string) error {
 	return nil
 }
 
-func (repo *TaskRepository) GetById(id string) (*Task, error) {
+func (repo *TaskRepository) GetById(id uint) (*Task, error) {
 	var task Task
-	result := repo.Database.DB.Where("id = ? AND deletedAt IS NULL", id).First(&task)
+	result := repo.Database.DB.First(&task, id)
 	if result.Error != nil {
 		return nil, result.Error
 	}
 
 	return &task, nil
+}
+
+func (repo *TaskRepository) Update(task *Task) (*Task, error) {
+	result := repo.Database.DB.Save(task)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return task, nil
+}
+
+func (repo *TaskRepository) GetAll() ([]Task, error) {
+	var tasks []Task
+	result := repo.Database.DB.Find(&tasks)
+	if result.Error != nil {
+		return nil, result.Error
+	}
+	return tasks, nil
 }
